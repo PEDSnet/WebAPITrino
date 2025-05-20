@@ -1252,6 +1252,20 @@
       </dependencies>
     </profile>
     <profile>
+      <id>webapi-trino</id>
+      <properties>
+        <trino.enabled>true</trino.enabled>
+        <trino.driver.version>469</trino.driver.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>io.trino</groupId>
+          <artifactId>trino-jdbc</artifactId>
+          <version>${trino.driver.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>webapi-gis</id>
       <properties>
         <atlasgis.version>1.0.1</atlasgis.version>
