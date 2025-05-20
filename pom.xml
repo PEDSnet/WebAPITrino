@@ -20,19 +20,19 @@
     <hibernate.version>5.4.2.Final</hibernate.version>
     <postgresql.version>42.3.10</postgresql.version>
     <bouncycastle.version>1.69</bouncycastle.version>
-    <shiro.version>1.12.0</shiro.version>
+    <shiro.version>1.13.0</shiro.version>
     <dom4j.version>2.1.3</dom4j.version>
     <hydra.version>0.4.0</hydra.version>
-    <featureExtraction.version>3.2.0</featureExtraction.version>
+    <featureExtraction.version>3.8.0</featureExtraction.version>
     <tomcat.embed.version>8.5.87</tomcat.embed.version>
 
     <commons-fileupload.version>1.5</commons-fileupload.version>
 
-    <circe.version>1.12.0-SNAPSHOT</circe.version>
+    <circe.version>1.12.1</circe.version>
     <jersey.version>2.14</jersey.version>
     <SqlRender.version>1.19.1</SqlRender.version>
     <hive-jdbc.version>3.1.2</hive-jdbc.version>
-    <pac4j.version>4.0.0</pac4j.version>
+    <pac4j.version>4.5.5</pac4j.version>
     <jackson.version>2.12.7</jackson.version>
     <start-class>org.ohdsi.webapi.WebApi</start-class>
     <skipUnitTests>false</skipUnitTests>
@@ -200,7 +200,7 @@
     <server.ssl.key-password></server.ssl.key-password>
     <server.servlet.context-path>/WebAPI</server.servlet.context-path>
 
-    <arachne.version>1.17.3</arachne.version>
+    <arachne.version>1.17.4</arachne.version>
     <jersey-media-multipart.version>2.25.1</jersey-media-multipart.version>
     <execution.invalidation.period>600000</execution.invalidation.period>
     <execution.invalidation.maxage.hours>12</execution.invalidation.maxage.hours>
@@ -301,7 +301,11 @@
 
     <audit.trail.enabled>false</audit.trail.enabled>
     <audit.trail.log.file>/tmp/atlas/audit/audit.log</audit.trail.log.file>
+    <audit.trail.log.file.pattern>/tmp/atlas/audit/audit-%d{yyyy-MM-dd}-%i.log</audit.trail.log.file.pattern>
     <audit.trail.log.extraFile>/tmp/atlas/audit/audit-extra.log</audit.trail.log.extraFile>
+
+    <!-- Shiny -->
+    <shiny.enabled>false</shiny.enabled>
   </properties>
 
   <build>
@@ -489,7 +493,7 @@
           </execution>
         </executions>
         <configuration>
-          <licence>cHJvamVjdHxvcmcub2hkc2kuV2ViQVBJfDIwMjUtMDEtMDF8ZmFsc2V8LTEjTUN3Q0ZDZkowMkZrVmVSeVlBazZVbTBmNThIbE15SjRBaFEwcVZyRUZuamZMTzJ0KzFtR3E3U3lMMkFESHc9PQ==</licence>
+          <licence>cHJvamVjdHxvcmcub2hkc2kuV2ViQVBJfDIwMzAtMDEtMDF8ZmFsc2V8LTEjTUN3Q0ZDOEFFWEdzU0lISUJiMzBBWC9WazlGcmdPME1BaFI4MVM5bkViQUpXN0tiWE9zR1NpRFlPam5zaXc9PQ==</licence>
           <restModel>
             <httpStatusCodes>
               <httpStatusCode>
@@ -586,7 +590,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
+      <version>2.12.7.1</version>
       <exclusions>
         <exclusion>
           <groupId>com.fasterxml.jackson.core</groupId>
@@ -767,7 +771,7 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.7</version>
+      <version>2.14.0</version>
     </dependency>
     <dependency>
       <groupId>com.sun.xml.security</groupId>
@@ -1009,7 +1013,7 @@
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-      <version>20230227</version>
+      <version>20231013</version>
     </dependency>
     <dependency>
       <groupId>org.ohdsi</groupId>
@@ -1146,7 +1150,7 @@
     <dependency>
       <groupId>org.ohdsi</groupId>
       <artifactId>SkeletonCohortCharacterization</artifactId>
-      <version>1.2.1</version>
+      <version>2.0.1</version>
       <exclusions>
         <exclusion>
           <groupId>org.ohdsi</groupId>
@@ -1257,6 +1261,15 @@
       <artifactId>dbunit-plus</artifactId>
       <version>2.0.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.12.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
   </dependencies>
 
@@ -1532,67 +1545,67 @@
         <dependency>
           <groupId>com.google.api-client</groupId>
           <artifactId>google-api-client</artifactId>
-          <version>1.33.4</version>
+          <version>2.7.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.apis</groupId>
           <artifactId>google-api-services-bigquery</artifactId>
-          <version>v2-rev20220326-1.32.1</version>
+          <version>v2-rev20240919-2.0.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.cloud</groupId>
           <artifactId>google-cloud-bigquery</artifactId>
-          <version>1.2.15</version>
+          <version>1.6.2.1003</version>
         </dependency>
         <dependency>
           <groupId>com.google.http-client</groupId>
           <artifactId>google-http-client</artifactId>
-          <version>1.41.5</version>
+          <version>1.45.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.http-client</groupId>
           <artifactId>google-http-client-gson</artifactId>
-          <version>1.41.5</version>
+          <version>1.45.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.oauth-client</groupId>
           <artifactId>google-oauth-client</artifactId>
-          <version>1.33.3</version>
+          <version>1.36.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.cloud</groupId>
           <artifactId>google-cloud-bigquerystorage</artifactId>
-          <version>2.12.0</version>
+          <version>3.9.3</version>
         </dependency>
         <dependency>
           <groupId>com.google.auth</groupId>
           <artifactId>google-auth-library-oauth2-http</artifactId>
-          <version>1.6.0</version>
+          <version>1.28.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.auth</groupId>
           <artifactId>google-auth-library-credentials</artifactId>
-          <version>1.6.0</version>
+          <version>1.28.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.api</groupId>
           <artifactId>gax</artifactId>
-          <version>2.13.0</version>
+          <version>2.55.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.api</groupId>
           <artifactId>gax-grpc</artifactId>
-          <version>2.13.0</version>
+          <version>2.55.0</version>
         </dependency>
         <dependency>
           <groupId>com.google.api.grpc</groupId>
           <artifactId>proto-google-cloud-bigquerystorage-v1</artifactId>
-          <version>2.12.0</version>
+          <version>3.9.3</version>
         </dependency>
         <dependency>
           <groupId>io.opencensus</groupId>
           <artifactId>opencensus-contrib-http-util</artifactId>
-          <version>0.31.0</version>
+          <version>0.31.1</version>
         </dependency>
       </dependencies>
       <build>
@@ -1611,9 +1624,9 @@
                 <configuration>
                   <groupId>com.google.api-client</groupId>
                   <artifactId>google-api-client</artifactId>
-                  <version>1.33.4</version>
+                  <version>2.7.0</version>
                   <packaging>jar</packaging>
-                  <file>${bigquery.classpath}/google-api-client-1.33.4.jar</file>
+                  <file>${bigquery.classpath}/google-api-client-2.7.0.jar</file>
                 </configuration>
               </execution>
               <execution>
@@ -1625,9 +1638,9 @@
                 <configuration>
                   <groupId>com.google.apis</groupId>
                   <artifactId>google-api-services-bigquery</artifactId>
-                  <version>v2-rev20220326-1.32.1</version>
+                  <version>v2-rev20240919-2.0.0</version>
                   <packaging>jar</packaging>
-                  <file>${bigquery.classpath}/google-api-services-bigquery-v2-rev20220326-1.32.1.jar</file>
+                  <file>${bigquery.classpath}/google-api-services-bigquery-v2-rev20240919-2.0.0.jar</file>
                 </configuration>
               </execution>
               <execution>
@@ -1639,7 +1652,7 @@
                 <configuration>
                   <groupId>com.google.cloud</groupId>
                   <artifactId>google-cloud-bigquery</artifactId>
-                  <version>1.2.15</version>
+                  <version>1.6.2.1003</version>
                   <packaging>jar</packaging>
                   <file>${bigquery.classpath}/GoogleBigQueryJDBC42.jar</file>
                 </configuration>
@@ -1653,9 +1666,9 @@
                 <configuration>
                   <groupId>com.google.http-client</groupId>
                   <artifactId>google-http-client</artifactId>
-                  <version>1.41.5</version>
+                  <version>1.45.0</version>
                   <packaging>jar</packaging>
-                  <file>${bigquery.classpath}/google-http-client-1.41.5.jar</file>
+                  <file>${bigquery.classpath}/google-http-client-1.45.0.jar</file>
                 </configuration>
               </execution>
               <execution>
@@ -1667,9 +1680,9 @@
                 <configuration>
                   <groupId>com.google.http-client</groupId>
                   <artifactId>google-http-client-gson</artifactId>
-                  <version>1.41.5</version>
+                  <version>1.45.0</version>
                   <packaging>jar</packaging>
-                  <file>${bigquery.classpath}/google-http-client-gson-1.41.5.jar</file>
+                  <file>${bigquery.classpath}/google-http-client-gson-1.45.0.jar</file>
                 </configuration>
               </execution>
               <execution>
@@ -1681,9 +1694,9 @@
                 <configuration>
                   <groupId>com.google.oauth-client</groupId>
                   <artifactId>google-oauth-client</artifactId>
-                  <version>1.33.1</version>
+                  <version>1.36.0</version>
                   <packaging>jar</packaging>
-                  <file>${bigquery.classpath}/google-oauth-client-1.33.1.jar</file>
+                  <file>${bigquery.classpath}/google-oauth-client-1.36.0.jar</file>
                 </configuration>
               </execution>
               <execution>
@@ -1695,9 +1708,9 @@
                 <configuration>
                   <groupId>com.google.cloud</groupId>
                   <artifactId>google-cloud-bigquerystorage</artifactId>
-                  <version>2.12.0</version>
+                  <version>3.9.3</version>
                   <packaging>jar</packaging>
-                  <file>${bigquery.classpath}/google-cloud-bigquerystorage-2.12.0.jar</file>
+                  <file>${bigquery.classpath}/google-cloud-bigquerystorage-3.9.3.jar</file>
                 </configuration>
               </execution>
             </executions>
@@ -1851,7 +1864,7 @@
       <id>webapi-snowflake</id>
       <properties>
         <snowflake.enabled>true</snowflake.enabled>
-        <snowflake.driver.version>3.20.0</snowflake.driver.version>
+        <snowflake.driver.version>3.22.0</snowflake.driver.version>
       </properties>
       <dependencies>
         <dependency>
@@ -1873,6 +1886,17 @@
             <artifactId>trino-jdbc</artifactId>
             <version>469</version> 
          </dependency>
+      <id>webapi-iris</id>
+      <properties>
+        <iris.enabled>true</iris.enabled>
+        <iris.driver.version>3.10.2</iris.driver.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.intersystems</groupId>
+          <artifactId>intersystems-jdbc</artifactId>
+          <version>${iris.driver.version}</version>
+        </dependency>
       </dependencies>
     </profile>
     <profile>
@@ -1910,6 +1934,108 @@
           <type>jar</type>
         </dependency>
       </dependencies>
+    </profile>
+    <profile>
+      <id>webapi-shiny</id>
+      <properties>
+        <shiny.enabled>true</shiny.enabled>
+        <shiny.atlas.url>http://localhost/Atlas</shiny.atlas.url>
+        <shiny.output.directory>src/main/resources/shiny</shiny.output.directory>
+        <shiny.app.directory></shiny.app.directory>
+        <spring.profiles.active>default,shiny</spring.profiles.active>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.3.2</version>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${shiny.output.directory}</directory>
+                  <includes>
+                    <include>shiny-cohortCounts.zip</include>
+                    <include>shiny-incidenceRates.zip</include>
+                    <include>shiny-cohortCharacterizations.zip</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.6.0</version>
+            <executions>
+              <execution>
+                <id>build-cohortCounts-archive</id>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <archiveBaseDirectory>${shiny.app.directory}</archiveBaseDirectory>
+                  <outputDirectory>${shiny.output.directory}</outputDirectory>
+                  <descriptors>
+                    <descriptor>src/main/assembly/shiny-cohortCounts.xml</descriptor>
+                  </descriptors>
+                  <finalName>shiny-cohortCounts</finalName>
+                </configuration>
+              </execution>
+              <execution>
+                <id>build-incidenceRates-archive</id>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <archiveBaseDirectory>${shiny.app.directory}</archiveBaseDirectory>
+                  <outputDirectory>${shiny.output.directory}</outputDirectory>
+                  <descriptors>
+                    <descriptor>src/main/assembly/shiny-incidenceRates.xml</descriptor>
+                  </descriptors>
+                  <finalName>shiny-incidenceRates</finalName>
+                </configuration>
+              </execution>
+              <execution>
+                <id>build-cohortCharacterizations-archive</id>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <archiveBaseDirectory>${shiny.app.directory}</archiveBaseDirectory>
+                  <outputDirectory>${shiny.output.directory}</outputDirectory>
+                  <descriptors>
+                    <descriptor>src/main/assembly/shiny-cohortCharacterizations.xml</descriptor>
+                  </descriptors>
+                  <finalName>shiny-cohortCharacterizations</finalName>
+                </configuration>
+              </execution>
+              <execution>
+                <id>build-cohortPathways-archive</id>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <archiveBaseDirectory>${shiny.app.directory}</archiveBaseDirectory>
+                  <outputDirectory>${shiny.output.directory}</outputDirectory>
+                  <descriptors>
+                    <descriptor>src/main/assembly/shiny-cohortPathways.xml</descriptor>
+                  </descriptors>
+                  <finalName>shiny-cohortPathways</finalName>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
