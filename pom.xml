@@ -1828,6 +1828,34 @@
       </dependencies>
     </profile>
     <profile>
+      <id>webapi-iris</id>
+      <properties>
+        <iris.enabled>true</iris.enabled>
+        <iris.driver.version>3.10.2</iris.driver.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.intersystems</groupId>
+          <artifactId>intersystems-jdbc</artifactId>
+          <version>${iris.driver.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>webapi-trino</id>
+      <properties>
+        <trino.enabled>true</trino.enabled>
+        <trino.driver.version>469</trino.driver.version>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>io.trino</groupId>
+            <artifactId>trino-jdbc</artifactId>
+            <version>469</version> 
+         </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>webapi-gis</id>
       <properties>
         <atlasgis.version>1.0.1</atlasgis.version>
