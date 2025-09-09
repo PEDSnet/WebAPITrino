@@ -1,6 +1,7 @@
 package org.ohdsi.webapi.util;
 
 import org.ohdsi.sql.BigQuerySparkTranslate;
+import org.ohdsi.sql.SqlSplit;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.*;
@@ -12,6 +13,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Arrays;
 
 public class CancelableJdbcTemplate extends JdbcTemplate {
 
@@ -85,7 +87,20 @@ public class CancelableJdbcTemplate extends JdbcTemplate {
                 rowsAffected[i] = -1;
                 continue;
               }
-            } else {
+            }
+            else if (connectionString.startsWith("jdbc:trino")) {
+              // Trino: split multi-statement SQL into individual statements
+              List<String> statements = Arrays.asList(SqlSplit.splitSql(sql[i]));
+              int updates = 0;
+              for (String splitStmt : statements) {
+                this.currSql = splitStmt;
+                if (!stmt.execute(this.currSql)) {
+                  updates += stmt.getUpdateCount();
+                }
+              }
+              rowsAffected[i] = updates;
+            } 
+            else {
               this.currSql = sql[i];
             }
             if (!stmt.execute(this.currSql)) {
@@ -156,9 +171,16 @@ public class CancelableJdbcTemplate extends JdbcTemplate {
 
     // NOTE:
     // com.cloudera.impala.hivecommon.dataengine.HiveJDBCDataEngine.prepareBatch throws NOT_IMPLEMENTED exception
-    return JdbcUtils.supportsBatchUpdates(connection) 
-              && !connection.getMetaData().getURL().startsWith("jdbc:impala")
-              && !connection.getMetaData().getURL().startsWith("jdbc:IRIS")
-              && !connection.getMetaData().getURL().startsWith("jdbc:trino");
+    //return JdbcUtils.supportsBatchUpdates(connection) 
+    //          && !connection.getMetaData().getURL().startsWith("jdbc:impala")
+    //          && !connection.getMetaData().getURL().startsWith("jdbc:IRIS")
+    //          && !connection.getMetaData().getURL().startsWith("jdbc:trino");
+    String url = connection.getMetaData().getURL().toLowerCase();
+    boolean result = JdbcUtils.supportsBatchUpdates(connection)
+            && !url.startsWith("jdbc:impala")
+            && !url.startsWith("jdbc:iris")
+            && !url.startsWith("jdbc:trino"); // <- Trino excluded
+    System.out.println("[DEBUG] URL = " + url + " | supportsBatchUpdates() = " + result);
+    return result;
   }
 }
