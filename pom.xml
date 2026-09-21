@@ -293,6 +293,20 @@
 
   <repositories>
     <repository>
+      <!-- Local file-based repository holding custom OHDSI builds with Trino support
+           (custom SqlRender with the Trino dialect, databaseConnector, SqlTender).
+           Layout + installer: /data/ohdsi_jars/README.md. Adjust the URL if moved. -->
+      <id>ohdsi-local-trino</id>
+      <name>Local OHDSI Trino jars (file repository)</name>
+      <url>file:///data/ohdsi_jars</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>ohdsi</id>
       <name>repo.ohdsi.org</name>
       <url>https://repo.ohdsi.org/nexus/content/groups/public</url>
@@ -1256,12 +1270,32 @@
       <properties>
         <trino.enabled>true</trino.enabled>
         <trino.driver.version>469</trino.driver.version>
+        <!-- Custom OHDSI artifacts with Trino support, resolved from the local file
+             repository /data/ohdsi_jars (see /data/ohdsi_jars/README.md).
+             SqlRender is overridden because the official 1.19.x releases have no
+             Trino dialect, so WebAPI cannot render DDL/SQL for Trino without it.
+             databaseConnector and SqlTender are NOT consumed by WebAPI itself; they
+             are included so the rest of the Trino OHDSI Java toolchain can share this
+             classpath. Drop them (and their version properties) if you don't need that. -->
+        <SqlRender.version>1.19.1-trino.1</SqlRender.version>
+        <databaseConnector.version>6.3.3</databaseConnector.version>
+        <sqtender.version>1.1.1</sqtender.version>
       </properties>
       <dependencies>
         <dependency>
           <groupId>io.trino</groupId>
           <artifactId>trino-jdbc</artifactId>
           <version>${trino.driver.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.ohdsi</groupId>
+          <artifactId>databaseConnector</artifactId>
+          <version>${databaseConnector.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.ohdsi</groupId>
+          <artifactId>SqlTender</artifactId>
+          <version>${sqtender.version}</version>
         </dependency>
       </dependencies>
     </profile>
