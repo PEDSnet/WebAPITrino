@@ -28,6 +28,9 @@
     <circe.version>1.13.0</circe.version>
     <featureExtraction.version>3.8.0</featureExtraction.version>
     <SqlRender.version>1.19.1</SqlRender.version>
+    <!-- Local file repository with custom OHDSI Trino builds (used by the
+         webapi-trino profile); override with -Dohdsi.trino.repo.dir=<path> -->
+    <ohdsi.trino.repo.dir>/data/ohdsi_jars</ohdsi.trino.repo.dir>
     <hive-jdbc.version>3.1.2</hive-jdbc.version>
     <jackson.version>2.18.2</jackson.version>
     <java.version>21</java.version>
@@ -295,10 +298,11 @@
     <repository>
       <!-- Local file-based repository holding custom OHDSI builds with Trino support
            (custom SqlRender with the Trino dialect, databaseConnector, SqlTender).
-           Layout + installer: /data/ohdsi_jars/README.md. Adjust the URL if moved. -->
+           Layout + installer: /data/ohdsi_jars/README.md. Location is configurable
+           via the ohdsi.trino.repo.dir property (-Dohdsi.trino.repo.dir=<path>). -->
       <id>ohdsi-local-trino</id>
       <name>Local OHDSI Trino jars (file repository)</name>
-      <url>file:///data/ohdsi_jars</url>
+      <url>file://${ohdsi.trino.repo.dir}</url>
       <releases>
         <enabled>true</enabled>
       </releases>
