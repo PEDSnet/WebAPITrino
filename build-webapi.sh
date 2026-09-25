@@ -16,8 +16,12 @@
 #                              Where the Temurin JDK is extracted when the system
 #                              package manager cannot be used (no root/sudo)
 #   OHDSI_TRINO_REPO_DIR=/data/ohdsi_jars
-#                              Local file repository with the custom Trino OHDSI jars
-#                              (passed to Maven as -Dohdsi.trino.repo.dir)
+#                              Optional local file repository for custom Trino
+#                              OHDSI jars (passed to Maven as -Dohdsi.trino.repo.dir).
+#                              Only needed if you installed a custom SqlRender with
+#                              a Trino dialect (see /data/ohdsi_jars/README.md).
+#   EXTRA_MAVEN_ARGS="..."     Extra Maven arguments, e.g. to use a custom SqlRender
+#                              build: EXTRA_MAVEN_ARGS="-DSqlRender.version=1.19.1-trino.1"
 #   JAVA_HOME=<path>           If set and it contains a matching javac, it is used
 #                              as-is and no JDK installation is attempted
 #
@@ -120,16 +124,12 @@ if [ "$JAVA_VERSION" != "21" ]; then
   warn "WebAPI 3.0 compiles with maven.compiler.release=21; a Java $JAVA_VERSION build will most likely fail."
 fi
 
-# --- 2. Check the local Trino jar repository ----------------------------------
-if [ "$PROFILE" = "webapi-trino" ]; then
-  if [ -d "$OHDSI_TRINO_REPO_DIR" ]; then
-    log "Local Trino jar repository: $OHDSI_TRINO_REPO_DIR"
-  else
-    warn "Local Trino jar repository not found: $OHDSI_TRINO_REPO_DIR"
-    warn "The webapi-trino profile will fail to resolve custom OHDSI artifacts."
-    warn "Copy /data/ohdsi_jars from the original server (see its README.md),"
-    warn "install the real Trino jars, and set OHDSI_TRINO_REPO_DIR to its new location."
-  fi
+# --- 2. Check the local Trino jar repository (optional) ------------------------
+if [ "$PROFILE" = "webapi-trino" ] && [ ! -d "$OHDSI_TRINO_REPO_DIR" ]; then
+  warn "Local Trino jar repository not found: $OHDSI_TRINO_REPO_DIR"
+  warn "This only matters if you installed a custom SqlRender with a Trino dialect"
+  warn "(then set OHDSI_TRINO_REPO_DIR to its location); otherwise the build"
+  warn "resolves everything from repo.ohdsi.org and Maven Central."
 fi
 
 # --- 3. Build -----------------------------------------------------------------
@@ -144,6 +144,12 @@ case "$PROFILE" in
   ""|none) ;;
   *) MVN_ARGS+=(-P"$PROFILE" -Dohdsi.trino.repo.dir="$OHDSI_TRINO_REPO_DIR") ;;
 esac
+# Extra Maven arguments, e.g. EXTRA_MAVEN_ARGS="-DSqlRender.version=1.19.1-trino.1"
+# (word-splitting is intentional: the value is a list of -D flags)
+if [ -n "${EXTRA_MAVEN_ARGS:-}" ]; then
+  # shellcheck disable=SC2206
+  MVN_ARGS+=(${EXTRA_MAVEN_ARGS})
+fi
 log "Building: ./mvnw ${MVN_ARGS[*]}"
 ./mvnw "${MVN_ARGS[@]}"
 

@@ -296,8 +296,10 @@
 
   <repositories>
     <repository>
-      <!-- Local file-based repository holding custom OHDSI builds with Trino support
-           (custom SqlRender with the Trino dialect, databaseConnector, SqlTender).
+      <!-- Local file-based repository for optional custom OHDSI builds with Trino
+           support (e.g. a custom SqlRender that has a real Trino dialect). Nothing
+           in the current build depends on it; if it is empty/missing the build
+           still resolves everything from repo.ohdsi.org and Maven Central.
            Layout + installer: /data/ohdsi_jars/README.md. Location is configurable
            via the ohdsi.trino.repo.dir property (-Dohdsi.trino.repo.dir=<path>). -->
       <id>ohdsi-local-trino</id>
@@ -1274,32 +1276,25 @@
       <properties>
         <trino.enabled>true</trino.enabled>
         <trino.driver.version>469</trino.driver.version>
-        <!-- Custom OHDSI artifacts with Trino support, resolved from the local file
-             repository /data/ohdsi_jars (see /data/ohdsi_jars/README.md).
-             SqlRender is overridden because the official 1.19.x releases have no
-             Trino dialect, so WebAPI cannot render DDL/SQL for Trino without it.
-             databaseConnector and SqlTender are NOT consumed by WebAPI itself; they
-             are included so the rest of the Trino OHDSI Java toolchain can share this
-             classpath. Drop them (and their version properties) if you don't need that. -->
-        <SqlRender.version>1.19.1-trino.1</SqlRender.version>
-        <databaseConnector.version>6.3.3</databaseConnector.version>
-        <sqtender.version>1.1.1</sqtender.version>
       </properties>
+      <!-- Mirrors the proven 2.x webapi-trino setup: the profile only adds the
+           Trino JDBC driver. The 2.x arachne jars (arachne-commons/-types/-utils,
+           execution-engine-commons 1.17.4) are NOT needed here — WebAPI 3.0
+           internalized the Arachne classes, so no org.ohdsi.arachne artifact is
+           referenced at all.
+           NOTE: the official SqlRender 1.19.x (repo.ohdsi.org) has no "trino"
+           target dialect (SqlTranslate.translateSql throws for it), so register
+           Trino sources with the "postgresql" dialect — Trino is PG-compatible
+           and the jdbc:trino URL quirks (statement splitting, batch updates)
+           are handled in CancelableJdbcTemplate. If you have a custom SqlRender
+           build WITH a Trino dialect, install it into the ohdsi-local-trino file
+           repository (see /data/ohdsi_jars/README.md) and build with
+           -DSqlRender.version=<that-version> (EXTRA_MAVEN_ARGS in build-webapi.sh). -->
       <dependencies>
         <dependency>
           <groupId>io.trino</groupId>
           <artifactId>trino-jdbc</artifactId>
           <version>${trino.driver.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.ohdsi</groupId>
-          <artifactId>databaseConnector</artifactId>
-          <version>${databaseConnector.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.ohdsi</groupId>
-          <artifactId>SqlTender</artifactId>
-          <version>${sqtender.version}</version>
         </dependency>
       </dependencies>
     </profile>
